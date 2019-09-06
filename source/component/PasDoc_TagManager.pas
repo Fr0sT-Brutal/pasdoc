@@ -1041,10 +1041,23 @@ var
     end else
     if toParameterRequired in Tag.TagOptions then
     begin
-      { Read Parameters to the end of Description or newline. }
-      while (i <= Length(Description)) and
-            (not IsCharInSet(Description[i], [#10, #13])) do
+      { Read Parameters to the end of Description or newline but consume newline
+        prefixed with "line feed" char \ (just like shell scripts, C lang etc.) }
+      while (i <= Length(Description)) do
+      begin
+        if IsCharInSet(Description[i], WhiteSpaceNL) then
+          if Description[i - 1] = '\' then
+          begin
+            // Skip newlines after "line feed" char and scan one more line
+            if i = Length(Description) then Break;
+            // Skip two-char newline if it present
+            if IsCharInSet(Description[i + 1], WhiteSpaceNL) and (Description[i] <> Description[i + 1]) then
+              Inc(i);
+          end
+          else
+            Break;
         Inc(i);
+      end;
       Parameters := Trim(Copy(Description, OffsetEnd, i - OffsetEnd));
       OffsetEnd := i;
     end;

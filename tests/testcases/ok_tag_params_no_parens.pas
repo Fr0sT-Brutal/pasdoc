@@ -49,6 +49,18 @@ type
   @returns Some integer *)
 function SomeProc(A: Integer): Integer;
 
+{
+  You can even have multiline params without parens with the help of "line feed" char \
+  (just like shell scripts, C lang etc.)
+  @raises EBar when it's in bad mood.\
+    But don't worry it won't hapen too often
+  @param A means something\
+    or maybe nothing
+  @returns Some integer\
+    and good wishes
+}
+function SomeProc1(A: Integer): Integer;
+
 implementation
 
 end.
